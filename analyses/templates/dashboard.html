@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>📊 Dashboard</h2>
+
+<div class="row">
+
+  <div class="col-md-6">
+    <div class="card p-3 bg-primary text-white">
+      👨‍⚕️ Patients
+      <h2>{{ nb_patients }}</h2>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card p-3 bg-success text-white">
+      🧪 Analyses
+      <h2>{{ nb_analyses }}</h2>
+    </div>
+  </div>
+
+</div>
+
+<br>
+
+<!-- GRAPH -->
+<canvas id="chart"></canvas>
+
+<script>
+const ctx = document.getElementById('chart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for s in stats %}"{{ s.type_analyse }}",{% endfor %}],
+        datasets: [{
+            label: 'Analyses',
+            data: [{% for s in stats %}{{ s.total }},{% endfor %}],
+            backgroundColor: '#0d6efd'
+        }]
+    }
+});
+</script>
+
+{% endblock %}

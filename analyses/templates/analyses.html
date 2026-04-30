@@ -1,0 +1,61 @@
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    const csrftoken = '{{ csrf_token }}';
+</script>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Type</th>
+            <th>Statut</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for analyse in analyses %}
+        <tr id="row-{{ analyse.id }}">
+            <td>{{ analyse.patient.nom }}</td>
+            <td>{{ analyse.type_analyse }}</td>
+            <td>{{ analyse.statut }}</td>
+
+            <td>
+                <button type="button" class="delete-btn" data-id="{{ analyse.id }}">
+                    Supprimer
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<script>
+$(".delete-btn").click(function () {
+
+    let id = $(this).data("id");
+
+    if (!confirm("Voulez-vous supprimer cette analyse ?")) {
+        return;
+    }
+
+    $.ajax({
+        url: "/analyses/delete/" + id + "/",
+        type: "POST",
+        data: {
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function () {
+            $("#row-" + id).remove();
+        },
+        error: function () {
+            alert("Erreur suppression !");
+        }
+    });
+
+});
+</script>
