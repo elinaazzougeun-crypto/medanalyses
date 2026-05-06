@@ -2,43 +2,124 @@
 
 {% block content %}
 
-<h2>📊 Dashboard</h2>
+<h2 class="mb-4">📊 Dashboard</h2>
 
-<div class="row">
+<!-- CARTES STATISTIQUES -->
+<div class="row g-3 mb-4">
 
-  <div class="col-md-6">
-    <div class="card p-3 bg-primary text-white">
-      👨‍⚕️ Patients
-      <h2>{{ nb_patients }}</h2>
+    <div class="col-md-3">
+        <div class="card text-white bg-primary shadow p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-6">👨‍⚕️ Patients</div>
+                    <div class="fs-1 fw-bold">{{ nb_patients }}</div>
+                </div>
+                <div class="fs-1 opacity-50">🏥</div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="col-md-6">
-    <div class="card p-3 bg-success text-white">
-      🧪 Analyses
-      <h2>{{ nb_analyses }}</h2>
+    <div class="col-md-3">
+        <div class="card text-white bg-success shadow p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-6">🧪 Analyses</div>
+                    <div class="fs-1 fw-bold">{{ nb_analyses }}</div>
+                </div>
+                <div class="fs-1 opacity-50">📋</div>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <div class="col-md-3">
+        <div class="card text-white bg-warning shadow p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-6">⏳ En attente</div>
+                    <div class="fs-1 fw-bold">{{ nb_en_attente }}</div>
+                </div>
+                <div class="fs-1 opacity-50">🕐</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-white bg-info shadow p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-6">✅ Terminées</div>
+                    <div class="fs-1 fw-bold">{{ nb_termines }}</div>
+                </div>
+                <div class="fs-1 opacity-50">✔️</div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
-<br>
+<!-- GRAPHIQUE + DERNIÈRES ANALYSES -->
+<div class="row g-3">
 
-<!-- GRAPH -->
-<canvas id="chart"></canvas>
+    <!-- GRAPHIQUE -->
+    <div class="col-md-6">
+        <div class="card shadow p-3">
+            <h5 class="mb-3">📈 Statut des Analyses</h5>
+            <canvas id="chart" style="max-height: 250px;"></canvas>
+        </div>
+    </div>
 
+    <!-- DERNIÈRES ANALYSES -->
+    <div class="col-md-6">
+        <div class="card shadow p-3">
+            <h5 class="mb-3">🕐 Dernières Analyses</h5>
+            <table class="table table-sm table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Patient</th>
+                        <th>Type</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in latest %}
+                    <tr>
+                        <td>{{ a.patient.nom }}</td>
+                        <td>{{ a.type_analyse }}</td>
+                        <td>
+                            {% if a.statut == 'termine' %}
+                                <span class="badge bg-success">✅ Terminé</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">⏳ En attente</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" class="text-center">Aucune analyse.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- GRAPHIQUE JS -->
 <script>
 const ctx = document.getElementById('chart');
-
 new Chart(ctx, {
-    type: 'bar',
+    type: 'doughnut',
     data: {
-        labels: [{% for s in stats %}"{{ s.type_analyse }}",{% endfor %}],
+        labels: ['✅ Terminées', '⏳ En attente'],
         datasets: [{
-            label: 'Analyses',
-            data: [{% for s in stats %}{{ s.total }},{% endfor %}],
-            backgroundColor: '#0d6efd'
+            data: [{{ nb_termines }}, {{ nb_en_attente }}],
+            backgroundColor: ['#198754', '#ffc107'],
+            borderWidth: 2
         }]
+    },
+    options: {
+        plugins: {
+            legend: { position: 'bottom' }
+        }
     }
 });
 </script>

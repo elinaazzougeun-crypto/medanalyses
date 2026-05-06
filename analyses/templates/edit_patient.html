@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="mb-3">
+    <a href="{% url 'patients' %}" class="btn btn-secondary">⬅ Retour</a>
+</div>
+
+<div class="card shadow p-4" style="max-width: 500px;">
+    <h2 class="mb-4">✏️ Modifier le Patient</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Nom</label>
+            <input type="text" name="nom" class="form-control" 
+                   value="{{ patient.nom }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Prénom</label>
+            <input type="text" name="prenom" class="form-control" 
+                   value="{{ patient.prenom }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Âge</label>
+            <input type="number" name="age" class="form-control" 
+                   value="{{ patient.age }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-warning w-100">💾 Enregistrer</button>
+    </form>
+</div>
+
+{% endblock %}

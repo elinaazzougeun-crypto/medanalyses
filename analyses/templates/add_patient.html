@@ -1,13 +1,81 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'style.css' %}">
-<h1>Liste Patients</h1>
+{% extends "base.html" %}
 
-{% for p in patients %}
-<p>
-    {{ p.nom }} - {{ p.age }}
-    <a href="/delete-patient/{{ p.id }}/">Supprimer</a>
-</p>
-{% endfor %}
+{% block content %}
 
-<a href="/add-patient/">Ajouter patient</a>
-<a href="/pdf/patients/">PDF</a>
+<div class="mb-3">
+    <a href="{% url 'patients' %}" class="btn btn-secondary">⬅ Retour</a>
+</div>
+
+<div class="card shadow p-4" style="max-width: 600px;">
+    <h2 class="mb-4">➕ Ajouter un Patient</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <h5 class="text-primary mb-3">👤 Informations personnelles</h5>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nom</label>
+                <input type="text" name="nom" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Prénom</label>
+                <input type="text" name="prenom" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Âge</label>
+                <input type="number" name="age" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Sexe</label>
+                <select name="sexe" class="form-select" required>
+                    <option value="M">Masculin</option>
+                    <option value="F">Féminin</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Téléphone</label>
+                <input type="text" name="telephone" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Adresse</label>
+            <textarea name="adresse" class="form-control" rows="2"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Date de naissance</label>
+            <input type="date" name="date_naissance" class="form-control">
+        </div>
+
+        <hr>
+        <h5 class="text-success mb-3">🔐 Accès patient</h5>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nom d'utilisateur</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Mot de passe</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">💾 Enregistrer</button>
+    </form>
+</div>
+
+{% endblock %}

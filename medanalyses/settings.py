@@ -86,12 +86,12 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE':   'django.db.backends.postgresql',
-        'NAME':     os.environ.get('DB_NAME',     'medanalyses'),
-        'USER':     os.environ.get('DB_USER',     'postgres'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'root'),
-        'HOST':     os.environ.get('DB_HOST',     'localhost'),
-        'PORT':     os.environ.get('DB_PORT',     '5432'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'medanalyses',
+        'USER': 'postgres',
+        'PASSWORD': 'ton_mot_de_passe',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

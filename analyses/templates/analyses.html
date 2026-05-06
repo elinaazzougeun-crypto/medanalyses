@@ -1,54 +1,60 @@
-{% load static %}
+{% extends "base.html" %}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% block content %}
 
-<script>
-    const csrftoken = '{{ csrf_token }}';
-</script>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>🧪 Liste des Analyses</h2>
+    <div>
+        <a href="{% url 'add_analyse' %}" class="btn btn-primary">➕ Ajouter</a>
+        <a href="{% url 'export_analyses_pdf' %}" class="btn btn-danger">📄 PDF Global</a>
+    </div>
+</div>
 
-<table border="1">
-    <thead>
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
         <tr>
             <th>Patient</th>
             <th>Type</th>
             <th>Statut</th>
-            <th>Action</th>
+            <th>Actions</th>
         </tr>
     </thead>
-
     <tbody>
         {% for analyse in analyses %}
         <tr id="row-{{ analyse.id }}">
             <td>{{ analyse.patient.nom }}</td>
             <td>{{ analyse.type_analyse }}</td>
             <td>{{ analyse.statut }}</td>
-
             <td>
-                <button type="button" class="delete-btn" data-id="{{ analyse.id }}">
-                    Supprimer
+                <a href="{% url 'edit_analyse' analyse.id %}" class="btn btn-sm btn-warning">✏️ Modifier</a>
+                <a href="{% url 'export_patient_pdf' analyse.patient.id %}" class="btn btn-sm btn-success">📄 PDF</a>
+                <button type="button" class="btn btn-sm btn-danger delete-btn"
+                        data-id="{{ analyse.id }}">
+                    🗑 Supprimer
                 </button>
             </td>
         </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center">Aucune analyse trouvée.</td></tr>
         {% endfor %}
     </tbody>
 </table>
 
+{% csrf_token %}
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-$(".delete-btn").click(function () {
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+$(".delete-btn").click(function () {
     let id = $(this).data("id");
 
-    if (!confirm("Voulez-vous supprimer cette analyse ?")) {
-        return;
-    }
+    if (!confirm("Supprimer cette analyse ?")) return;
 
     $.ajax({
         url: "/analyses/delete/" + id + "/",
         type: "POST",
-        data: {
-            csrfmiddlewaretoken: csrftoken
-        },
+        data: { csrfmiddlewaretoken: csrftoken },
         success: function () {
             $("#row-" + id).remove();
         },
@@ -56,6 +62,7 @@ $(".delete-btn").click(function () {
             alert("Erreur suppression !");
         }
     });
-
 });
 </script>
+
+{% endblock %}

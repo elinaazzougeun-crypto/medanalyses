@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="mb-3">
+    <a href="{% url 'analyses' %}" class="btn btn-secondary">⬅ Retour</a>
+</div>
+
+<div class="card shadow p-4" style="max-width: 500px;">
+    <h2 class="mb-4">➕ Ajouter une Analyse</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Patient</label>
+            <select name="patient" class="form-select" required>
+                <option value="">-- Choisir un patient --</option>
+                {% for p in patients %}
+                <option value="{{ p.id }}">{{ p.nom }} {{ p.prenom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Type d'analyse</label>
+            <select name="type_analyse" class="form-select" required>
+                <option value="">-- Choisir un type --</option>
+
+                <optgroup label="🩸 Hématologie">
+                    <option value="NFS - Numération Formule Sanguine">NFS - Numération Formule Sanguine</option>
+                    <option value="Groupe Sanguin">Groupe Sanguin</option>
+                    <option value="Taux d'hémoglobine">Taux d'hémoglobine</option>
+                    <option value="Plaquettes">Plaquettes</option>
+                </optgroup>
+
+                <optgroup label="🧪 Biochimie">
+                    <option value="Glycémie">Glycémie</option>
+                    <option value="Créatinine">Créatinine</option>
+                    <option value="Urée">Urée</option>
+                    <option value="Cholestérol Total">Cholestérol Total</option>
+                    <option value="Triglycérides">Triglycérides</option>
+                    <option value="Transaminases ALAT">Transaminases ALAT</option>
+                    <option value="Transaminases ASAT">Transaminases ASAT</option>
+                    <option value="Bilirubine">Bilirubine</option>
+                </optgroup>
+
+                <optgroup label="🦠 Microbiologie">
+                    <option value="ECBU - Examen Cytobactériologique">ECBU</option>
+                    <option value="Hémoculture">Hémoculture</option>
+                    <option value="Coproculture">Coproculture</option>
+                </optgroup>
+
+                <optgroup label="🔬 Immunologie">
+                    <option value="CRP - Protéine C Réactive">CRP - Protéine C Réactive</option>
+                    <option value="Sérologie HIV">Sérologie HIV</option>
+                    <option value="Sérologie Hépatite B">Sérologie Hépatite B</option>
+                    <option value="Sérologie Hépatite C">Sérologie Hépatite C</option>
+                </optgroup>
+
+                <optgroup label="🫀 Cardiologie">
+                    <option value="Troponine">Troponine</option>
+                    <option value="ECG">ECG</option>
+                    <option value="CPK">CPK</option>
+                </optgroup>
+
+                <optgroup label="🧬 Hormonologie">
+                    <option value="TSH - Thyroïde">TSH - Thyroïde</option>
+                    <option value="T3 - T4">T3 - T4</option>
+                    <option value="Insuline">Insuline</option>
+                    <option value="Cortisol">Cortisol</option>
+                </optgroup>
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Statut</label>
+            <select name="statut" class="form-select" required>
+                <option value="en_attente">⏳ En attente</option>
+                <option value="termine">✅ Terminé</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">💾 Enregistrer</button>
+    </form>
+</div>
+
+{% endblock %}

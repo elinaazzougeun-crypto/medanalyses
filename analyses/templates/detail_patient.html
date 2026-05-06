@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="mb-3">
+    <a href="{% url 'patients' %}" class="btn btn-secondary">⬅ Retour</a>
+</div>
+
+<div class="card shadow p-4" style="max-width: 600px;">
+    <h2 class="mb-4">👤 Détail du Patient</h2>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Nom</th>
+            <td>{{ patient.nom }}</td>
+        </tr>
+        <tr>
+            <th>Prénom</th>
+            <td>{{ patient.prenom }}</td>
+        </tr>
+        <tr>
+            <th>Âge</th>
+            <td>{{ patient.age }} ans</td>
+        </tr>
+    </table>
+
+    <div class="mt-3">
+        <a href="{% url 'edit_patient' patient.id %}" class="btn btn-warning">✏️ Modifier</a>
+
+        <form method="POST" action="{% url 'delete_patient' patient.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger"
+                onclick="return confirm('Supprimer ce patient ?')">
+                🗑 Supprimer
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
